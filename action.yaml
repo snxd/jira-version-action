@@ -37,7 +37,7 @@ runs:
 
     - name: Install Dependencies
       shell: bash
-      run: pip install -r requirements.txt
+      run: pip install -r ${{ github.action_path }}/requirements.txt
 
     - name: Convert release to env arg
       if: ${{ inputs.release == 'true' }}
@@ -52,7 +52,7 @@ runs:
     - name: Run Script
       shell: bash
       run: |
-        python jira.py \
+        python ${{ github.action_path }}/jira.py \
           --email='${{ inputs.email }}' \
           --api_token='${{ inputs.api_token }}' \
           --project_key='${{ inputs.project_key }}' \
