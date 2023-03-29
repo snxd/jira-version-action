@@ -7,12 +7,35 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Lint and Test
     runs-on: ubuntu-latest
     steps:
+      - name: Setup python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
       - name: Checkout
         uses: actions/checkout@v2
 
+      # Start linting
+      - name: Install linter dependencies
+        run: pip install --disable-pip-version-check black flake8 isort[colors] pylint
+
+      # Install all the requirements files found in this repository
+      - name: Install python requirements
+        run: find . -name 'requirements.txt' -exec pip install  --disable-pip-version-check -r {} \;
+
+      - name: Check format (black)
+        run: black --color --check --diff .
+
+      - name: Import ordering (isort)
+        run: isort --color --check-only --diff .
+
+      - name: Lint (flake8)
+        run: flake8
+
+      # Start testing
       - name: Create version
         uses: ./
         with:
