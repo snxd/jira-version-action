@@ -1,0 +1,12 @@
+[BASIC]
+good-names=x,i,ex,ip,s3
+
+[MASTER]
+disable=C0114,C0115,C0116
+
+[FORMAT]
+max-line-length=120
+
+[SIMILARITIES]
+min-similarity-lines=6
+ignore-imports=yes

@@ -1,0 +1,5 @@
+.venv/
+venv/
+/.codacy-coverage
+/.coverage
+*.pyc
