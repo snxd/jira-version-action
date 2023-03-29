@@ -1,0 +1,43 @@
+name: Test
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create version
+        uses: ./
+        with:
+          email: ${{ secrets.JIRA_EMAIL }}
+          api_token: ${{ secrets.JIRA_API_TOKEN }}
+          host: ${{ secrets.JIRA_HOST }}
+          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          version: abc123xyz
+
+      - name: Release version
+        uses: ./
+        with:
+          email: ${{ secrets.JIRA_EMAIL }}
+          api_token: ${{ secrets.JIRA_API_TOKEN }}
+          host: ${{ secrets.JIRA_HOST }}
+          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          version: abc123xyz
+          release: true
+
+      - name: Delete version
+        uses: ./
+        with:
+          email: ${{ secrets.JIRA_EMAIL }}
+          api_token: ${{ secrets.JIRA_API_TOKEN }}
+          host: ${{ secrets.JIRA_HOST }}
+          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          version: abc123xyz
+          delete: true

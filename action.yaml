@@ -1,0 +1,62 @@
+name: Jira Release Action
+description: A GitHub action to create Jira releases
+inputs:
+  email:
+    required: true
+    description: Email address associated with api token
+  api_token:
+    required: true
+    description: Jira api token
+  host:
+    required: true
+    description: Jira project host
+  project_key:
+    required: true
+    description: Project key
+  version:
+    required: true
+    description: Name of the version
+  release:
+    type: boolean
+    required: false
+    description: Release the version
+    default: false
+  delete:
+    type: boolean
+    required: false
+    description: Delete the version
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      shell: bash
+      run: pip install -r requirements.txt
+
+    - name: Convert release to env arg
+      if: ${{ inputs.release == 'true' }}
+      shell: bash
+      run: echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
+
+    - name: Convert delete to env arg
+      if: ${{ inputs.delete == 'true' }}
+      shell: bash
+      run: echo "DELETE_FLAG=--delete" >> $GITHUB_ENV
+
+    - name: Run Script
+      shell: bash
+      run: |
+        python jira.py \
+          --email='${{ inputs.email }}' \
+          --api_token='${{ inputs.api_token }}' \
+          --project_key='${{ inputs.project_key }}' \
+          --host='${{ inputs.host }}' \
+          --version='${{ inputs.version }}' \
+          ${{ env.RELEASE_FLAG }} \
+          ${{ env.DELETE_FLAG }}
