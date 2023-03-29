@@ -1,0 +1,28 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.rulers": [
+        120
+    ],
+    "files.exclude": {
+        "**/*.pyc": true,
+        "**/__pycache__/": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "search.exclude": {
+        "**/.git": true,
+        "**/.venv": true,
+    },
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.terminal.activateEnvironment": true,
+    "python.formatting.provider": "black",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#014335",
+        "titleBar.activeBackground": "#015e33",
+        "titleBar.activeForeground": "#F3FCFF"
+    }
+}
