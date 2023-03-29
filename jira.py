@@ -13,7 +13,7 @@ parser.add_argument('--host', help='Jira hostname', action='store', required=Tru
 parser.add_argument('--version', help='Version name', action='store', required=True)
 parser.add_argument('--release', help='Release', action='store_true', required=False)
 parser.add_argument('--delete', help='Delete', action='store_true', required=False)
-args, unknown = parser.parse_known_args()
+args, _ = parser.parse_known_args()
 
 
 # Retrieve the id of a project with its key
