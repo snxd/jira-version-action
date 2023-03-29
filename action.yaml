@@ -39,16 +39,6 @@ runs:
       shell: bash
       run: pip install -r ${{ github.action_path }}/requirements.txt
 
-    - name: Convert release to env arg
-      if: ${{ inputs.release == 'true' }}
-      shell: bash
-      run: echo "RELEASE_FLAG=--release" >> $GITHUB_ENV
-
-    - name: Convert delete to env arg
-      if: ${{ inputs.delete == 'true' }}
-      shell: bash
-      run: echo "DELETE_FLAG=--delete" >> $GITHUB_ENV
-
     - name: Run Script
       shell: bash
       run: |
@@ -58,5 +48,5 @@ runs:
           --project_key='${{ inputs.project_key }}' \
           --host='${{ inputs.host }}' \
           --version='${{ inputs.version }}' \
-          ${{ env.RELEASE_FLAG }} \
-          ${{ env.DELETE_FLAG }}
+          ${{ inputs.release == 'true' && '--release' || '' }} \
+          ${{ inputs.delete == 'true' && '--delete' || '' }}
