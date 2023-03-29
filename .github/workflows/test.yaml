@@ -35,6 +35,10 @@ jobs:
       - name: Lint (flake8)
         run: flake8
 
+      - name: Create unique name
+        run: |
+          echo "VERSION=unit-test-$(echo $RANDOM | md5sum | head -c 20)" >> $GITHUB_ENV
+
       # Start testing
       - name: Create version
         uses: ./
@@ -43,7 +47,7 @@ jobs:
           api_token: ${{ secrets.JIRA_API_TOKEN }}
           host: ${{ secrets.JIRA_HOST }}
           project_key: ${{ secrets.JIRA_PROJECT_KEY }}
-          version: abc123xyz
+          version: ${{ env.VERSION }}
 
       - name: Release version
         uses: ./
@@ -52,7 +56,7 @@ jobs:
           api_token: ${{ secrets.JIRA_API_TOKEN }}
           host: ${{ secrets.JIRA_HOST }}
           project_key: ${{ secrets.JIRA_PROJECT_KEY }}
-          version: abc123xyz
+          version: ${{ env.VERSION }}
           release: true
 
       - name: Delete version
@@ -62,5 +66,5 @@ jobs:
           api_token: ${{ secrets.JIRA_API_TOKEN }}
           host: ${{ secrets.JIRA_HOST }}
           project_key: ${{ secrets.JIRA_PROJECT_KEY }}
-          version: abc123xyz
+          version: ${{ env.VERSION }}
           delete: true
