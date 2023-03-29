@@ -4,15 +4,15 @@ Create and release Jira versions automatically with this GitHub action.
 
 ## Options
 
-| Name           | Description                             |
-|----------------|-----------------------------------------|
-| --email=       | Email address associated with api token |
-| --api_token=   | Jira api token                          |
-| --host=        | Jira project host                       |
-| --project_key= | Project key                             |
-| --version=     | Name of version                         |
-| --release      | Release the version                     |
-| --delete       | Delete the version                      |
+| Name        | Type    | Description                             |
+|-------------|---------|-----------------------------------------|
+| email       | string  | Email address associated with api token |
+| api_token   | string  | Jira api token                          |
+| host        | string  | Jira project host                       |
+| project_key | string  | Project key                             |
+| version     | string  | Name of version                         |
+| release     | boolean | Release the version                     |
+| delete      | boolean | Delete the version                      |
 
 ## Usage
 
