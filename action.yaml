@@ -1,5 +1,5 @@
-name: Jira Release Action
-description: A GitHub action to create Jira releases
+name: Jira Version Action
+description: A GitHub action to create Jira versions
 inputs:
   email:
     required: true
