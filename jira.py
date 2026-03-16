@@ -3,21 +3,32 @@ import json
 import sys
 import time
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 import requests
 
 
-@dataclass(frozen=True)
+@dataclass
 class JiraConfig:
     host: str
     email: str
     api_token: str
+    scheme: str = "https"
+
+    def __post_init__(self):
+        parsed = urlparse(self.host if "://" in self.host else f"https://{self.host}")
+        self.scheme = parsed.scheme
+        self.host = parsed.netloc or parsed.path
+
+    @property
+    def base_url(self):
+        return f"{self.scheme}://{self.host}"
 
 
 # Retrieve the id of a project with its key
 def jira_version_get_project_id(config, project_key):
     response = requests.get(
-        url=f"https://{config.host}/rest/api/3/project/{project_key}",
+        url=f"{config.base_url}/rest/api/3/project/{project_key}",
         auth=(config.email, config.api_token),
         headers={"Content-Type": "application/json"},
         params={"properties": "id"},
@@ -40,7 +51,7 @@ def jira_version_get_project_id(config, project_key):
 def jira_version_get(config, project_id, version):
     # Missing key errors can also be caused by missing user permissions
     response = requests.get(
-        url=f"https://{config.host}/rest/api/3/project/{project_id}/versions",
+        url=f"{config.base_url}/rest/api/3/project/{project_id}/versions",
         auth=(config.email, config.api_token),
         headers={"Content-Type": "application/json"},
         timeout=60,
@@ -69,7 +80,7 @@ def jira_version_add(config, project_id, version):
     }
     print(params)
     response = requests.post(
-        url=f"https://{config.host}/rest/api/3/version",
+        url=f"{config.base_url}/rest/api/3/version",
         auth=(config.email, config.api_token),
         headers={"Content-Type": "application/json"},
         data=json.dumps(params),
@@ -90,7 +101,7 @@ def jira_version_add(config, project_id, version):
 # Delete a project version
 def jira_version_delete(config, version):
     response = requests.delete(
-        url=f"https://{config.host}/rest/api/3/version/{version['id']}",
+        url=f"{config.base_url}/rest/api/3/version/{version['id']}",
         auth=(config.email, config.api_token),
         headers={"Content-Type": "application/json"},
         timeout=60,
@@ -118,7 +129,7 @@ def jira_version_release(config, version):
         version["releaseDate"] = time.strftime("%Y-%m-%d")
 
     response = requests.put(
-        url=f"https://{config.host}/rest/api/3/version/{version['id']}",
+        url=f"{config.base_url}/rest/api/3/version/{version['id']}",
         auth=(config.email, config.api_token),
         headers={"Content-Type": "application/json"},
         data=json.dumps(version),

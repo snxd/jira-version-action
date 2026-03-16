@@ -35,36 +35,39 @@ jobs:
       - name: Lint (flake8)
         run: flake8
 
+      - name: Start mock Jira server
+        run: python test/mock_jira_server.py --port 8080 --project-key TEST &
+
       - name: Create unique name
         run: |
           echo "VERSION=unit-test-$(echo $RANDOM | md5sum | head -c 20)" >> $GITHUB_ENV
 
-      # Start testing
+      # Start testing against the mock server
       - name: Create version
         uses: ./
         with:
-          email: ${{ secrets.JIRA_EMAIL }}
-          api_token: ${{ secrets.JIRA_API_TOKEN }}
-          host: ${{ secrets.JIRA_HOST }}
-          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          email: test@test.com
+          api_token: fake-token
+          host: http://localhost:8080
+          project_key: TEST
           version: ${{ env.VERSION }}
 
       - name: Release version
         uses: ./
         with:
-          email: ${{ secrets.JIRA_EMAIL }}
-          api_token: ${{ secrets.JIRA_API_TOKEN }}
-          host: ${{ secrets.JIRA_HOST }}
-          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          email: test@test.com
+          api_token: fake-token
+          host: http://localhost:8080
+          project_key: TEST
           version: ${{ env.VERSION }}
           release: true
 
       - name: Delete version
         uses: ./
         with:
-          email: ${{ secrets.JIRA_EMAIL }}
-          api_token: ${{ secrets.JIRA_API_TOKEN }}
-          host: ${{ secrets.JIRA_HOST }}
-          project_key: ${{ secrets.JIRA_PROJECT_KEY }}
+          email: test@test.com
+          api_token: fake-token
+          host: http://localhost:8080
+          project_key: TEST
           version: ${{ env.VERSION }}
           delete: true
